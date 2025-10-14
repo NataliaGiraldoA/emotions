@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author">
+    
+    <title>Sistema de Detección de Emociones</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    
+    <main class="main-container">
+        <header class="header">
+            <h1>Sistema de Detección de Emociones</h1>
+            <div class="header-actions">
+                <button id="toggleCapture" class="btn-capture">Pausar Captura</button>
+                <a href="/emotions_history" class="btn-link" target="_blank">Ver Historial JSON</a>
+            </div>
+        </header>
+        
+
+        <div class="content-container">
+
+            <section class="video-container" aria-label="Video en tiempo real">
+                <div class="video-wrapper">
+                    <img src="{{ url_for('video_feed') }}" 
+                         alt="Feed de video en tiempo real con análisis de emociones" 
+                         class="video-stream"
+                         id="video"
+                         loading="lazy">
+                </div>
+            </section>
+        
+            
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+.venv
+
+# Archivos de caché y compilados
+__pycache__/
+*.pyc
