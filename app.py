@@ -7,6 +7,8 @@ import tempfile
 from datetime import datetime
 from time import time
 from src.emotion_detector import EmotionDetector
+from src.api import gemini_reply
+from src.audio_recorder import AudioRecorder
 
 app = Flask(__name__)
 
@@ -146,12 +148,21 @@ class WebEmotionDetector(EmotionDetector):
 
 # Instancia global del detector web
 web_detector = None
+# Instancia global del audio recorder
+audio_recorder = None
 
 def get_web_detector():
     global web_detector
     if web_detector is None:
         web_detector = WebEmotionDetector(webcam_index=0)
     return web_detector
+
+def get_audio_recorder():
+    global audio_recorder
+    if audio_recorder is None:
+        audio_recorder = AudioRecorder()
+    return audio_recorder
+
 
 @app.route('/')
 def index():
@@ -230,6 +241,42 @@ def health():
         'timestamp': time()
     })
 
+@app.route('/deepseek')
+def call_deepseek():
+    text = "Hola, ¿cómo estás?"
+    respuesta = gemini_reply(text)
+    print(respuesta)
+    return respuesta
+
+# Rutas para el audio recorder
+@app.route('/audio/start_recording', methods=['POST'])
+def start_audio_recording():
+    """Inicia la grabación de audio."""
+    recorder = get_audio_recorder()
+    success, message = recorder.start_recording()
+    return jsonify({
+        'success': success,
+        'message': message,
+        'status': recorder.get_recording_status()
+    })
+
+@app.route('/audio/stop_recording', methods=['POST'])
+def stop_audio_recording():
+    """Detiene la grabación de audio."""
+    recorder = get_audio_recorder()
+    success, message = recorder.stop_recording()
+    return jsonify({
+        'success': success,
+        'message': message,
+        'status': recorder.get_recording_status()
+    })
+
+@app.route('/audio/status')
+def audio_status():
+    """Obtiene el estado actual de la grabación."""
+    recorder = get_audio_recorder()
+    return jsonify(recorder.get_recording_status())
+
 if __name__ == '__main__':
     try:
         print("Iniciando servidor en: http://localhost:8080")
@@ -242,5 +289,7 @@ if __name__ == '__main__':
             web_detector.cap.release()
         if web_detector:
             web_detector.cleanup_session()
+        if audio_recorder:
+            audio_recorder.cleanup()
         cv2.destroyAllWindows()
-        print("Recursos liberados y archivo de sesión eliminado")
+        print("Recursos liberados y archivos temporales eliminados")

@@ -89,9 +89,7 @@ body {
 
 /* Layout de contenido */
 .content-container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
+  display: block;
 }
 
 /* Video */
@@ -243,5 +241,135 @@ body {
     top: 60px;
     font-size: 12px;
     padding: 10px 16px;
+  }
+}
+
+/* Audio Recorder Styles */
+.audio-container {
+  background: #ffffff;
+  border: 1px solid #e6e7e9;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.audio-wrapper h3 {
+  font-size: 16px;
+  color: #111;
+  font-weight: 600;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e6e7e9;
+  padding-bottom: 8px;
+}
+
+.audio-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-audio {
+  padding: 10px 16px;
+  border: 2px solid;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: white;
+}
+
+.btn-audio:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-audio:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-start {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.btn-start:hover:not(:disabled) {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-start.recording {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-stop {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.btn-stop:hover:not(:disabled) {
+  background: #ef4444;
+  color: white;
+}
+
+.audio-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.status-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.status-text.recording {
+  color: #16a34a;
+}
+
+.duration-text {
+  font-size: 12px;
+  color: #6c757d;
+  font-family: 'Courier New', monospace;
+}
+
+/* Responsive para audio recorder */
+@media (max-width: 900px) {
+  .audio-controls {
+    flex-direction: column;
+  }
+  
+  .btn-audio {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .audio-container {
+    padding: 12px;
+    margin-top: 16px;
+  }
+  
+  .audio-wrapper h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .audio-status {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
   }
 }
