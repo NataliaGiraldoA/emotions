@@ -45,27 +45,17 @@
                 <!-- Audio Recording Card -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Transcripción de audio</h2>
+                        <h2 class="card-title">Conversación con IA</h2>
                     </div>
                     <div class="card-content">
-                        <!-- Controls -->
-                        <div class="controls">
-                            <!--
-                            <button class="btn btn-primary" id="startBtn" onclick="startRecording()">
-                                Iniciar
-                            </button>-->
-                            <button class="btn btn-primary" id="record-btn" onclick="startRecording()">Hablar</button>
-                            <span id="status"></span>
-                            <!--
-                                <button class="btn btn-destructive" id="stopBtn" onclick="stopRecording()" disabled>
-                                    Detener
-                                </button>-->
-                        </div>
+                        <!-- Chat Box -->
+                        <div class="transcription-box empty" id="chat-box" class="chat-box"></div>
 
-                        <!-- Status -->
-                        <div class="status-box">
-                            <div class="status-box-dot" id="recordingDot"></div>
-                            <span class="status-box-text" id="recordingStatus">Listo para grabar</span>
+                        <!-- Typing Indicator (burbujas de escritura) -->
+                        <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
                         </div>
 
                         <!-- Audio Visualizer -->
@@ -84,21 +74,48 @@
                             <div class="bar"></div>
                         </div>
 
-                        <div>
-                            <h3
-                                style="font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 600;">
-                                Resultado</h3>
-                            <!--
-                            <div class="transcription-box empty" id="transcriptionBox">
-                                La transcripción aparecerá aquí...
-                            </div>-->
-                            <div class="transcription-box empty" id="chat-box" class="chat-box"></div>
+                        <!-- Status -->
+                        <div class="status-box">
+                            <div class="status-box-dot" id="recordingDot"></div>
+                            <span class="status-box-text" id="recordingStatus">Listo para grabar</span>
+                            <span id="status"></span>
+                        </div>
+
+                        <!-- Control Button (abajo y centrado) -->
+                        <div class="chat-controls">
+                            <button class="btn btn-primary btn-chat" id="record-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                    <line x1="12" y1="19" x2="12" y2="22"/>
+                                </svg>
+                                <span>Hablar</span>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Modal de Recomendaciones -->
+    <div id="recommendations-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" id="close-modal">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-header">
+                <h2>Tus recomendaciones musicales</h2>
+                <p>Basadas en tu estado emocional actual</p>
+            </div>
+            <div class="modal-body">
+                <div id="recommendations-container" class="recommendations-grid"></div>
+            </div>
+        </div>
+    </div>
 
     <script src='/static/js/app.js'></script>
     <script src='/static/js/transcribe.js'></script>
