@@ -10,7 +10,13 @@ from src.emotion_detector import EmotionDetector
 from src.api import gemini_reply
 from src.audio_recorder import AudioRecorder
 
+from flask_cors import CORS
+from faster_whisper import WhisperModel
+
 app = Flask(__name__)
+CORS(app)
+
+model = WhisperModel("base", device="cpu", compute_type="int8")
 
 class WebEmotionDetector(EmotionDetector):
     
@@ -276,6 +282,32 @@ def audio_status():
     """Obtiene el estado actual de la grabación."""
     recorder = get_audio_recorder()
     return jsonify(recorder.get_recording_status())
+
+
+@app.route("/transcribe")
+def transcribe():
+    return render_template("transcribe.html")
+
+
+
+@app.route("/transcribe_audio", methods=["POST"])
+def transcribe_audio():
+    try:
+        audio_file = request.files["audio"]
+        filename = "temp.wav"
+        audio_file.save(filename)
+
+        segments, info = model.transcribe(filename, beam_size=5)
+        text = " ".join([seg.text for seg in segments])
+
+        print(f"Transcripción completa: {text}")
+        os.remove(filename)
+
+        return jsonify({"text": text})
+    except Exception as e:
+        print(f"Error al transcribir: {e}")
+        return jsonify({"error": str(e)})
+    
 
 if __name__ == '__main__':
     try:
