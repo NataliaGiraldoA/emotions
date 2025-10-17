@@ -481,3 +481,105 @@ body {
     padding: 1rem;
   }
 }
+
+
+/* === CHAT ESTILOS === */
+
+#chat-box {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  height: 350px;               /* Tamaño fijo del chat */
+  overflow-y: auto;            /* Scroll si hay muchos mensajes */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  scroll-behavior: smooth;
+}
+
+/* Mensajes */
+.msg {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  max-width: 85%;
+  word-wrap: break-word;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.msg.user {
+  background: var(--accent);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.msg.assistant {
+  background: white;
+  color: var(--foreground);
+  align-self: flex-start;
+  border-bottom-left-radius: 0.25rem;
+  border: 1px solid var(--border);
+}
+
+/* Animación sutil */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Tarjetas de recomendaciones === */
+
+.reco-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: white;
+  border-radius: var(--radius-md);
+  padding: 10px 15px;
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease;
+}
+
+.reco-card:hover {
+  transform: scale(1.02);
+}
+
+.reco-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.reco-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--foreground);
+}
+
+.reco-info p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+}
+
+.artist-link {
+  color: #1DB954;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.artist-link:hover {
+  text-decoration: underline;
+}

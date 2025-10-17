@@ -276,10 +276,11 @@ def call_deepseek():
     print(respuesta)
     return respuesta"""
 
+"""
 # Rutas para el audio recorder
 @app.route('/audio/start_recording', methods=['POST'])
 def start_audio_recording():
-    """Inicia la grabación de audio."""
+    
     recorder = get_audio_recorder()
     success, message = recorder.start_recording()
     return jsonify({
@@ -290,7 +291,7 @@ def start_audio_recording():
 
 @app.route('/audio/stop_recording', methods=['POST'])
 def stop_audio_recording():
-    """Detiene la grabación de audio."""
+    
     recorder = get_audio_recorder()
     success, message = recorder.stop_recording()
     return jsonify({
@@ -301,10 +302,8 @@ def stop_audio_recording():
 
 @app.route('/audio/status')
 def audio_status():
-    """Obtiene el estado actual de la grabación."""
     recorder = get_audio_recorder()
-    return jsonify(recorder.get_recording_status())
-
+    return jsonify(recorder.get_recording_status())"""
 
 @app.route("/transcribe")
 def transcribe():
