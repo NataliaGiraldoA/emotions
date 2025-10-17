@@ -24,7 +24,7 @@ model = WhisperModel("base", device="cpu", compute_type="int8")
 
 INITIAL_PROMPT = (
     "Eres un asistente musical amable y curioso llamado Kelsier. "
-    "Tu tarea es conocer al usuario con solo 3 preguntas cortas para recomendarle canciones que puedan gustarle. "
+    "Tu tarea es conocer al usuario con solo 5 preguntas cortas para recomendarle canciones que puedan gustarle. "
     "Empieza tú la conversación saludando y haciendo la primera pregunta. "
     "Ten en cuenta que las respuestas del usuario pueden venir con errores de transcripción, así que interpreta lo mejor posible. "
     "Evita respuestas largas, sé natural y conversacional. "
@@ -379,29 +379,64 @@ def call_llm():
 """
 
 def generar_recomendaciones(chat_history):
-    """Analiza las respuestas y da recomendaciones finales."""
+    """Analiza las respuestas y da recomendaciones finales, integrando emociones detectadas."""
     context_text = "\n".join(
         [f"{msg['role'].upper()}: {msg['text']}" for msg in chat_history]
     )
 
+    # --- 1️⃣ Cargar datos de emociones desde el detector ---
+    detector = get_web_detector()
+    emociones_porcentaje = {}
+
+    try:
+        if os.path.exists(detector.json_file_path):
+            with open(detector.json_file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                emociones = [e["emotion"] for e in data.get("emotions", [])]
+
+            if emociones:
+                total = len(emociones)
+                conteo = {}
+                for emo in emociones:
+                    conteo[emo] = conteo.get(emo, 0) + 1
+
+                # Calcular porcentaje por emoción
+                emociones_porcentaje = {
+                    emo: round((count / total) * 100, 1)
+                    for emo, count in conteo.items()
+                }
+            else:
+                emociones_porcentaje = {"neutral": 100.0}
+        else:
+            emociones_porcentaje = {"neutral": 100.0}
+    except Exception as e:
+        print(f"⚠️ Error leyendo emociones: {e}")
+        emociones_porcentaje = {"neutral": 100.0}
+
+    print(f"📊 Emociones detectadas durante la sesión: {emociones_porcentaje}")
+
+    # --- 2️⃣ Construir prompt para la IA ---
     prompt = (
-        "Basado en la siguiente conversación, identifica el tipo de persona y sus gustos musicales. "
-        "Luego, recomienda de forma amigable entre 3 y 5 canciones o artistas que puedan gustarle. "
+        "Basado en la siguiente conversación y el análisis emocional del usuario, "
+        "identifica su tipo de personalidad musical. "
+        "Luego recomienda de forma amigable entre 3 y 5 canciones o artistas que puedan gustarle. "
         "Responde exclusivamente en formato JSON con la siguiente estructura:\n\n"
         "{\n"
         '  "recomendaciones": [\n'
         '    {"artista": "nombre", "cancion": "nombre", "spotify_url": "https://open.spotify.com/artist/..."}\n'
         "  ]\n"
         "}\n\n"
-        "No incluyas texto adicional fuera del JSON.\n\n"
-        "Asegúrate de que el enlace sea el del perfil del artista, no de una canción.\n\n"
-        f"{context_text}"
+        "No incluyas texto adicional fuera del JSON.\n"
+        "Asegúrate de que los enlaces sean de perfil de artista, no de canciones.\n\n"
+        f"📈 EMOCIONES DETECTADAS (porcentaje aproximado): {json.dumps(emociones_porcentaje, ensure_ascii=False)}\n\n"
+        f"🗣️ CONVERSACIÓN:\n{context_text}"
     )
 
+    # --- 3️⃣ Llamar al modelo ---
     raw_response = gemini_reply(prompt)
     print(f"\n🧠 RAW JSON DE LA IA:\n{raw_response}\n")
 
-    # 🧹 Limpieza de formato markdown
+    # --- 4️⃣ Limpieza de formato Markdown ---
     cleaned = raw_response.strip()
     cleaned = re.sub(r"^```(?:json)?", "", cleaned, flags=re.IGNORECASE).strip()
     cleaned = re.sub(r"```$", "", cleaned).strip()
@@ -412,6 +447,7 @@ def generar_recomendaciones(chat_history):
 
     print(f"🧩 JSON LIMPIO:\n{cleaned}\n")
 
+    # --- 5️⃣ Parsear el JSON ---
     try:
         data = json.loads(cleaned)
         if "recomendaciones" in data:
@@ -443,7 +479,7 @@ def call_llm():
             session.modified = True
             return jsonify({"response": respuesta, "done": True})"""
         
-        if question_count >= 3:
+        if question_count >= 5:
             recomendacion = generar_recomendaciones(chat_history)
             chat_history.append({"role": "assistant", "text": recomendacion})
             session["chat_history"] = chat_history
