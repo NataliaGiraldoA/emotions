@@ -9,7 +9,6 @@ from time import time
 from src.emotion_detector import EmotionDetector
 from src.api import gemini_reply
 from src.audio_recorder import AudioRecorder
-
 from flask_cors import CORS
 from faster_whisper import WhisperModel
 
@@ -185,6 +184,14 @@ def get_audio_recorder():
 
 
 @app.route('/')
+def landing():
+    return render_template('landing.html')
+
+@app.route('/setup')
+def setup():
+    return render_template('setup.html')
+
+@app.route('/app')
 def index():
     return render_template('index.html')
 

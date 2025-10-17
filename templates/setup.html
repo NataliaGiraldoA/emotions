@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - EmotionAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/setup.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="setup-container">
+        <header class="setup-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="brain"></i>
+                </div>
+                <span class="logo-text">EmotionAI</span>
+            </div>
+        </header>
+
+        <main class="setup-main">
+            <div class="setup-content">
+                <div class="setup-intro">
+                    <h1>Configurar dispositivos</h1>
+                    <p>Configura tu cámara y micrófono antes de comenzar el análisis de emociones</p>
+                </div>
+
+                <!-- Device Preview Grid -->
+                <div class="device-preview-grid">
+                    <!-- Camera Preview Card -->
+                    <div class="device-card">
+                        <div class="device-preview-area">
+                            <video id="camera-preview" class="preview-video" autoplay muted></video>
+                            <div id="camera-placeholder" class="preview-placeholder">
+                                <div class="placeholder-icon">
+                                    <i data-lucide="video-off"></i>
+                                </div>
+                                <span>Cámara desactivada</span>
+                            </div>
+                        </div>
+                        
+                        <div class="device-card-content">
+                            <div class="device-header-row">
+                                <div class="device-icon-wrapper camera-icon">
+                                    <i data-lucide="camera"></i>
+                                </div>
+                                <div class="device-info">
+                                    <h3>Cámara</h3>
+                                    <p id="camera-status" class="device-status">Verificando permisos...</p>
+                                </div>
+                                <div id="camera-check" class="status-check hidden">
+                                    <i data-lucide="check-circle-2"></i>
+                                </div>
+                            </div>
+                            
+                            <select id="camera-select" class="device-select" disabled>
+                                <option value="">Verificando dispositivos...</option>
+                            </select>
+                            
+                            <button id="test-camera" class="btn-device-action" disabled>
+                                <i data-lucide="camera-off"></i>
+                                Verificando permisos...
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Microphone Preview Card -->
+                    <div class="device-card">
+                        <div class="device-preview-area">
+                            <div class="mic-preview">
+                                <div class="mic-icon-large" id="mic-icon-large">
+                                    <i data-lucide="mic-off"></i>
+                                </div>
+                                
+                                <div id="audio-visualizer" class="audio-level-container hidden">
+                                    <div class="audio-level-info">
+                                        <span class="audio-level-label">Nivel de audio</span>
+                                        <span id="audio-level-percent" class="audio-level-value">0%</span>
+                                    </div>
+                                    <div class="audio-level-bar">
+                                        <div id="audio-level-fill" class="audio-level-fill"></div>
+                                    </div>
+                                    <div class="audio-bars-container">
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                        <div class="audio-bar"></div>
+                                    </div>
+                                </div>
+                                
+                                <div id="mic-placeholder" class="mic-placeholder">
+                                    <span>Micrófono desactivado</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="device-card-content">
+                            <div class="device-header-row">
+                                <div class="device-icon-wrapper mic-icon">
+                                    <i data-lucide="mic"></i>
+                                </div>
+                                <div class="device-info">
+                                    <h3>Micrófono</h3>
+                                    <p id="mic-status" class="device-status">Verificando permisos...</p>
+                                </div>
+                                <div id="mic-check" class="status-check hidden">
+                                    <i data-lucide="check-circle-2"></i>
+                                </div>
+                            </div>
+                            
+                            <select id="mic-select" class="device-select" disabled>
+                                <option value="">Verificando dispositivos...</option>
+                            </select>
+                            
+                            <button id="test-mic" class="btn-device-action" disabled>
+                                <i data-lucide="mic-off"></i>
+                                Verificando permisos...
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Permission Alert -->
+                <div id="permission-denied-alert" class="permission-denied-alert hidden">
+                    <div class="alert-content">
+                        <i data-lucide="alert-circle"></i>
+                        <div class="alert-text">
+                            <h4>Permisos denegados</h4>
+                            <p>Haz clic en el icono del candado en la barra de direcciones para habilitar los permisos de cámara y micrófono.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="setup-actions">
+                    <button id="continue-app" class="btn btn-primary btn-lg" disabled>
+                        <span>Continuar a la aplicación</span>
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/setup.js') }}"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

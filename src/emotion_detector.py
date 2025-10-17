@@ -67,12 +67,13 @@ class EmotionDetector:
     def draw_results(self, frame, emotion: str, confidence: float, all_emotions: Optional[Dict[str, float]] = None) -> None:
         color = self.colors.get(emotion.lower(), (255, 255, 255))
         # Emoción principal
+        """
         cv2.putText(frame, f"Emocion: {emotion}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
         cv2.putText(frame, f"Confianza: {confidence:.2f}", (10, 70),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
-
+        """
 
     def run(self) -> None:
         if not self.cap:

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmotionAI - Detección de Emociones con IA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <i data-lucide="brain"></i>
+                        </div>
+                        <span class="logo-text">EmotionAI</span>
+                    </div>
+                    <nav class="nav">
+                        <a href="#features" class="nav-link">Características</a>
+                        <a href="#how-it-works" class="nav-link">Cómo Funciona</a>
+                        <a href="#about" class="nav-link">Acerca de</a>
+                    </nav>
+                    <a href="{{ url_for('setup') }}" class="btn btn-primary">Comenzar</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i data-lucide="sparkles"></i>
+                        Detección de Emociones en Tiempo Real
+                    </div>
+                    <h1 class="hero-title">
+                        Comprende tus <span class="gradient-text">emociones</span> con IA
+                    </h1>
+                    <p class="hero-description">
+                        Tecnología avanzada de inteligencia artificial que analiza tu expresión facial y voz para identificar y
+                        comprender tus estados emocionales en tiempo real.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{{ url_for('setup') }}" class="btn btn-primary btn-lg group">
+                            Probar Ahora
+                            <i data-lucide="arrow-right" class="btn-icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Características Principales</h2>
+                    <p class="section-description">Tecnología de vanguardia para el análisis emocional</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card group">
+                        <div class="feature-icon accent">
+                            <i data-lucide="camera"></i>
+                        </div>
+                        <h3 class="feature-title">Análisis Facial</h3>
+                        <p class="feature-description">
+                            Detecta microexpresiones y patrones faciales para identificar emociones con precisión mediante visión
+                            por computadora.
+                        </p>
+                    </div>
+
+                    <div class="feature-card group">
+                        <div class="feature-icon primary">
+                            <i data-lucide="mic"></i>
+                        </div>
+                        <h3 class="feature-title">Análisis de Voz</h3>
+                        <p class="feature-description">
+                            Procesa el tono, ritmo y características vocales para complementar la detección emocional con análisis
+                            de audio.
+                        </p>
+                    </div>
+
+                    <div class="feature-card group">
+                        <div class="feature-icon secondary">
+                            <i data-lucide="brain"></i>
+                        </div>
+                        <h3 class="feature-title">IA Avanzada</h3>
+                        <p class="feature-description">
+                            Modelos de aprendizaje profundo entrenados para reconocer patrones emocionales complejos con alta
+                            precisión.
+                        </p>
+                    </div>
+
+                    <div class="feature-card group">
+                        <div class="feature-icon tertiary">
+                            <i data-lucide="activity"></i>
+                        </div>
+                        <h3 class="feature-title">Tiempo Real</h3>
+                        <p class="feature-description">
+                            Procesamiento instantáneo que proporciona retroalimentación inmediata sobre tu estado emocional actual.
+                        </p>
+                    </div>
+
+                    <div class="feature-card group">
+                        <div class="feature-icon tertiary">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                        <h3 class="feature-title">Privacidad</h3>
+                        <p class="feature-description">
+                            Procesamiento local que garantiza que tus datos emocionales permanezcan seguros y privados en todo
+                            momento.
+                        </p>
+                    </div>
+
+                    <div class="feature-card group">
+                        <div class="feature-icon secondary">
+                            <i data-lucide="layers"></i>
+                        </div>
+                        <h3 class="feature-title">Multimodal</h3>
+                        <p class="feature-description">
+                            Combina múltiples fuentes de datos para obtener una comprensión más completa y precisa de tus emociones.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Cómo Funciona</h2>
+                    <p class="section-description">Tres simples pasos para comenzar</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step">
+                        <div class="step-number accent">1</div>
+                        <h3 class="step-title">Activa tu Cámara</h3>
+                        <p class="step-description">
+                            Permite el acceso a tu cámara web para que podamos capturar tu expresión facial en tiempo real.
+                        </p>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number primary">2</div>
+                        <h3 class="step-title">Graba tu Voz</h3>
+                        <p class="step-description">
+                            Habla naturalmente mientras nuestro sistema analiza las características de tu voz y tono emocional.
+                        </p>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number tertiary">3</div>
+                        <h3 class="step-title">Obtén Resultados</h3>
+                        <p class="step-description">
+                            Recibe un análisis detallado de tus emociones con visualizaciones claras y comprensibles.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <div class="cta-card">
+                    <div class="cta-content">
+                        <h2 class="cta-title">Comienza a Explorar tus Emociones Hoy</h2>
+                        <p class="cta-description">
+                            Descubre una nueva forma de entender y conectar con tus estados emocionales
+                        </p>
+                        <a href="{{ url_for('setup') }}" class="btn btn-primary btn-lg">
+                            Iniciar Análisis
+                            <i data-lucide="arrow-right" class="btn-icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <i data-lucide="brain"></i>
+                        </div>
+                        <span class="logo-text">EmotionAI</span>
+                    </div>
+                    <p class="footer-text">
+                        © 2025 EmotionAI. Detección de emociones con inteligencia artificial.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

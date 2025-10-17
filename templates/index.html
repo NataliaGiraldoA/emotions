@@ -1,63 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author">
-    
+
     <title>Sistema de Detección de Emociones</title>
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    
+
+    <link rel="stylesheet" href="/static/css/styles.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    
-    <main class="main-container">
-        <header class="header">
-            <h1>Sistema de Detección de Emociones</h1>
-            <div class="header-actions">
-                <button id="toggleCapture" class="btn-capture">Pausar Captura</button>
-                <a href="/emotions_history" class="btn-link" target="_blank">Ver Historial JSON</a>
+
+    <main class="main-content">
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Video en tiempo real</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="video-wrapper">
+                            <img 
+                                src="{{ url_for('video_feed') }}" 
+                                alt="Feed de video" 
+                                class="video-stream" 
+                                id="videoStream"
+                            >
+                            <div class="video-overlay" id="emotionOverlay" style="display: none;">
+                                <div class="video-overlay-label">Emoción detectada</div>
+                                <div class="video-overlay-emotion" id="detectedEmotion">Neutral</div>
+                                <div class="video-overlay-confidence" id="emotionConfidence">0% confianza</div>
+                            </div>
+                            <div class="status-indicator">
+                                <div class="status-dot" id="statusDot"></div>
+                                <span id="statusText">En vivo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Audio Recording Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Transcripción de audio</h2>
+                        </div>
+                        <div class="card-content">
+                            <!-- Controls -->
+                            <div class="controls">
+                                <button class="btn btn-primary" id="startBtn" onclick="startRecording()">
+                                    Iniciar
+                                </button>
+                                <button class="btn btn-destructive" id="stopBtn" onclick="stopRecording()" disabled>
+                                    Detener
+                                </button>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="status-box">
+                                <div class="status-box-dot" id="recordingDot"></div>
+                                <span class="status-box-text" id="recordingStatus">Listo para grabar</span>
+                            </div>
+
+                            <!-- Audio Visualizer -->
+                            <div class="audio-visualizer" id="visualizer" style="display: none;">
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                            </div>
+
+                            <div>
+                                <h3 style="font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 600;">Resultado</h3>
+                                <div class="transcription-box empty" id="transcriptionBox">
+                                    La transcripción aparecerá aquí...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </header>
-        
+        </main>
 
-        <div class="content-container">
-
-            <section class="video-container" aria-label="Video en tiempo real">
-                <div class="video-wrapper">
-                    <img src="{{ url_for('video_feed') }}" 
-                         alt="Feed de video en tiempo real con análisis de emociones" 
-                         class="video-stream"
-                         id="video"
-                         loading="lazy">
-                </div>
-            </section>
-
-            <section class="audio-container" aria-label="Grabador de audio">
-                <div class="audio-wrapper">
-                    <h3>Grabador de Audio</h3>
-                    <div class="audio-controls">
-                        <button id="startRecording" class="btn-audio btn-start">
-                            Grabar
-                        </button>
-                        <button id="stopRecording" class="btn-audio btn-stop" disabled>
-                            Parar
-                        </button>
-                    </div>
-                    <div class="audio-status">
-                        <span id="recordingStatus" class="status-text">Listo para grabar</span>
-                        <span id="recordingDuration" class="duration-text"></span>
-                    </div>
-                </div>
-            </section>
-        
-            
-        </div>
-    </main>
-
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src='/static/js/app.js'></script>
+    <script src='/static/js/transcribe.js'></script>
 </body>
+
 </html>
