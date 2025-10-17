@@ -1,105 +1,132 @@
 let mediaRecorder;
 let audioChunks = [];
+const recordBtn = document.getElementById("record-btn");
+const chatBox = document.getElementById("chat-box");
+const statusText = document.getElementById("status");
 
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
-const statusEl = document.getElementById("status");
-const transcriptionEl = document.getElementById("transcription");
+// --- Mostrar mensajes en pantalla ---
+function addMessage(role, text) {
+    const msg = document.createElement("div");
+    msg.className = role === "assistant" ? "msg assistant" : "msg user";
+    msg.textContent = text;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-startBtn.addEventListener("click", async () => {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  mediaRecorder = new MediaRecorder(stream);
-  audioChunks = [];
+// --- Convertir texto a voz (opcional) ---
+function speak(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    speechSynthesis.speak(utterance);
+}
 
-  mediaRecorder.ondataavailable = event => {
-    audioChunks.push(event.data);
-  };
+// --- Mostrar recomendaciones finales ---
+function mostrarRecomendaciones(data) {
+    chatBox.innerHTML = ""; // Limpiamos el chat
 
-  mediaRecorder.onstart = () => {
-    statusEl.textContent = "Grabando...";
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
-  };
+    const titulo = document.createElement("h3");
+    titulo.textContent = "🎶 Tus recomendaciones musicales:";
+    chatBox.appendChild(titulo);
 
-  mediaRecorder.onstop = async () => {
-    statusEl.textContent = "Procesando audio...";
-    const blob = new Blob(audioChunks, { type: "audio/webm" });
-    const wavBlob = await convertToWav(blob);
+    data.recomendaciones.forEach(item => {
+        const card = document.createElement("div");
+        card.classList.add("reco-card");
 
-    const formData = new FormData();
-    formData.append("audio", wavBlob, "audio.wav");
+        // Usamos el logo local de Spotify
+        const logoPath = "/static/img/spotify_logo.png";
 
-    const response = await fetch("/transcribe_audio", {
-      method: "POST",
-      body: formData
+        card.innerHTML = `
+            <img src="${logoPath}" alt="Spotify logo" class="reco-img">
+            <div class="reco-info">
+                <h3>${item.cancion}</h3>
+                <a href="${item.spotify_url}" target="_blank" class="artist-link">${item.artista}</a>
+            </div>
+        `;
+
+        chatBox.appendChild(card);
     });
 
+    statusText.textContent = "🎧 ¡Recomendaciones generadas!";
+    speak("Aquí tienes tus recomendaciones musicales.");
+}
+
+// --- Iniciar la conversación automáticamente ---
+async function startChat() {
+    const response = await fetch("/start_chat");
     const data = await response.json();
-    if (data.text) {
-      transcriptionEl.textContent = data.text;
-      statusEl.textContent = "Transcripción completada.";
+    addMessage("assistant", data.response);
+    speak(data.response);
+}
+startChat(); // 👈 inicia automáticamente
+
+// --- Grabación de audio ---
+recordBtn.addEventListener("click", async () => {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        recordBtn.textContent = "🎤 Hablar";
+        statusText.textContent = "Procesando...";
     } else {
-      statusEl.textContent = "Error: " + (data.error || "Desconocido");
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+            await sendAudio(audioBlob);
+        };
+
+        mediaRecorder.start();
+        recordBtn.textContent = "⏹️ Detener";
+        statusText.textContent = "Grabando...";
     }
-
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
-  };
-
-  mediaRecorder.start();
 });
 
-stopBtn.addEventListener("click", () => {
-  if (mediaRecorder && mediaRecorder.state === "recording") {
-    mediaRecorder.stop();
-  }
-});
+// --- Enviar audio al backend ---
+async function sendAudio(blob) {
+    const formData = new FormData();
+    formData.append("audio", blob, "recording.wav");
 
-// Convertir WebM a WAV (16-bit PCM)
-async function convertToWav(blob) {
-  const arrayBuffer = await blob.arrayBuffer();
-  const audioCtx = new AudioContext();
-  const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    const res = await fetch("/transcribe_audio", { method: "POST", body: formData });
+    const data = await res.json();
 
-  const numChannels = audioBuffer.numberOfChannels;
-  const sampleRate = audioBuffer.sampleRate;
-  const length = audioBuffer.length * numChannels * 2 + 44;
-  const buffer = new ArrayBuffer(length);
-  const view = new DataView(buffer);
-  let pos = 0;
-
-  function writeString(s) {
-    for (let i = 0; i < s.length; i++) view.setUint8(pos++, s.charCodeAt(i));
-  }
-  function writeUint16(data) { view.setUint16(pos, data, true); pos += 2; }
-  function writeUint32(data) { view.setUint32(pos, data, true); pos += 4; }
-
-  writeString("RIFF");
-  writeUint32(length - 8);
-  writeString("WAVE");
-  writeString("fmt ");
-  writeUint32(16);
-  writeUint16(1);
-  writeUint16(numChannels);
-  writeUint32(sampleRate);
-  writeUint32(sampleRate * numChannels * 2);
-  writeUint16(numChannels * 2);
-  writeUint16(16);
-  writeString("data");
-  writeUint32(length - 44);
-
-  const channels = [];
-  for (let i = 0; i < numChannels; i++) channels.push(audioBuffer.getChannelData(i));
-
-  let offset = 0;
-  while (offset < audioBuffer.length) {
-    for (let i = 0; i < numChannels; i++) {
-      let sample = Math.max(-1, Math.min(1, channels[i][offset]));
-      view.setInt16(pos, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
-      pos += 2;
+    if (data.text) {
+        const userText = data.text.trim();
+        addMessage("user", userText);
+        await sendToLLM(userText);
+    } else {
+        statusText.textContent = "Error al transcribir";
     }
-    offset++;
-  }
+}
 
-  return new Blob([buffer], { type: "audio/wav" });
+// --- Enviar texto al modelo ---
+async function sendToLLM(userText) {
+    const res = await fetch("/llm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: userText })
+    });
+
+    const data = await res.json();
+
+    if (data.done && data.parsed) {
+        // ✅ Mostrar recomendaciones con logo de Spotify y links clickeables
+        mostrarRecomendaciones(data.response);
+        recordBtn.disabled = true;
+    } else if (data.response) {
+        addMessage("assistant", data.response);
+        speak(data.response);
+
+        if (data.done) {
+            statusText.textContent = "✅ Conversación completada.";
+            recordBtn.disabled = true;
+        } else {
+            statusText.textContent = "Listo para responder";
+        }
+    } else {
+        statusText.textContent = "Error al obtener respuesta";
+    }
 }

@@ -1,26 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transcripción con Faster-Whisper</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Musical - Kelsier 🎧</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 15px;
+            width: 400px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #222;
+        }
+
+        .msg {
+            padding: 8px 12px;
+            margin: 6px 0;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .msg.user {
+            background-color: #3a3a3a;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .msg.assistant {
+            background-color: #2a4d8f;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #record-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #record-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .reco-card {
+            display: flex;
+            align-items: center;
+            background: #2b2b2b;
+            border-radius: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .reco-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .reco-info h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .reco-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-6">
-  <h1 class="text-2xl font-bold mb-4">🎙️ Transcripción con Faster-Whisper</h1>
+<body>
+    <div class="chat-container">
+        <h2>🎧 Kelsier, tu asistente musical</h2>
+        <div id="chat-box" class="chat-box"></div>
 
-  <div class="flex gap-3 mb-6">
-    <button id="startBtn" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg">Iniciar grabación</button>
-    <button id="stopBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg" disabled>Detener grabación</button>
-  </div>
+        <div class="controls">
+            <button id="record-btn">🎤 Hablar</button>
+            <span id="status"></span>
+        </div>
+    </div>
 
-  <div id="status" class="mb-4 text-yellow-300"></div>
-
-  <div class="w-full max-w-2xl">
-    <h2 class="text-lg mb-2">📝 Transcripción:</h2>
-    <div id="transcription" class="bg-gray-800 p-4 rounded-lg min-h-[150px] whitespace-pre-wrap"></div>
-  </div>
-
-  <script src="{{ url_for('static', filename='js/transcribe.js') }}"></script>
+    <script src="/static/js/transcribe.js"></script>
 </body>
 </html>

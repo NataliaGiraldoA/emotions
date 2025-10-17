@@ -373,3 +373,112 @@ body {
     text-align: center;
   }
 }
+
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #121212;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.chat-container {
+    width: 400px;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #7bdff2;
+}
+
+.chat-box {
+    height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    background: #181818;
+}
+
+.msg {
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 10px;
+    line-height: 1.4;
+}
+
+.msg.assistant {
+    background-color: #2a2a2a;
+    color: #7bdff2;
+    align-self: flex-start;
+}
+
+.msg.user {
+    background-color: #7bdff2;
+    color: #000;
+    text-align: right;
+    align-self: flex-end;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #7bdff2;
+    color: #000;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #b2f7ef;
+}
+
+
+.reco-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #121212;
+    border-radius: 12px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
+}
+.reco-card:hover {
+    transform: scale(1.03);
+}
+.reco-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+}
+.reco-info h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.1rem;
+}
+.artist-link {
+    color: #1DB954;
+    text-decoration: none;
+    font-weight: bold;
+}
+.artist-link:hover {
+    text-decoration: underline;
+}
